@@ -1,0 +1,169 @@
+\documentclass{article}
+\usepackage{amsmath}    % some mathematical symbols
+\usepackage{amssymb}
+\usepackage{listings}   % lists
+
+
+\title{Algorithms Homework 2}
+\author{PB22111620  Ai Chang}
+
+\begin{document}
+\begin{sloppypar}
+
+\maketitle
+
+\section*{Q1}
+\begin{enumerate}
+    \item $\because T(n) = 4T(\frac{n}{2}) + n^2 \lg^2 n$
+
+    $\therefore a = 4, b = 2,$
+    $f(n) = n^2 \lg^2 n = \Theta(n^2 \lg^2 n) = \Theta(n^{log_b^a}\lg^kn)$
+
+    According to Master Method, $T(n) = \Theta(n^{log_b^a}\lg^{k+1}n) = \Theta(n^2\lg^3n)$
+
+    \item $\because T(n) = T(2n/3) + 2^{\lceil \lg n \rceil}$
+    $\therefore a = 1, b = \frac{3}{2},$
+
+    $f(n) = 2^{\lceil \lg n \rceil} = 2^{\lg n + (\lceil \lg n \rceil - \lg n)} = n2^\alpha, \alpha = \lceil \lg n \rceil - \lg n \in [0, 1)$
+
+    $\therefore \log_b^a = \log_{\frac{3}{2}}^{1} = 0, f(n) = \Theta(n) = \Theta(n^{log_b^a + 1})$
+
+    According to Master Method, $T(n) = \Theta(f(n)) = \Theta(n)$
+\end{enumerate}
+
+\section*{Q2}
+\begin{enumerate}
+    \item $\because T(n) = 2T(n/4) + 3T(n/6) + n\lg n$
+    \begin{align*} \therefore
+        T(24)   &= 2T(6) + 3T(4) + 24\lg 24\\
+                &= 2(2T(3/2) + 3T(1) + 6\lg 6) + 3(2T(1) + 3T(2/3) + 4\lg 4) + 24(3 + \lg 3)\\
+                &= 2(2(2T(3/8) + 3T(1/4) + \frac{3}{2}\lg{\frac{3}{2}}) + 3T(1) + 6(1 + \lg 3))\\
+                &\quad + 3(2T(1) + 3T(2/3) + 4\lg 4) + 24(3 + \lg 3)
+    \end{align*}
+    $\because T(x) = 1, \text{when } x \leq 1$
+
+    $\therefore T(24) = 143 + 42\lg 3 \approx 209.57$
+
+    \item My program is as follow:
+        \begin{lstlisting}[language=C]
+            #include<stdio.h>
+            #include<math.h>
+
+            double T(double n){
+                if(n <= 1){
+                    return 1;
+                }
+                else{
+                    return 2*T(n/4)+3*T(n/6)+n*log2(n);
+                }
+            }
+            int main(){
+                double input;
+                scanf("%lf", &input);
+                printf("%lf\n", T(input));
+                return 0;
+            }
+        \end{lstlisting}
+    According to the program,
+    \begin{align*}
+        T(100) &\approx 1616.67\\
+        T(1000) &\approx 29728.49\\
+        T(10000) &\approx 481351.65&
+    \end{align*}
+    I guess that $T(n) = \Theta(n\lg^2n)$
+    \item By drawing the recursion tree, we know that(I haven't learnt how to draw in LaTeX)
+        \begin{enumerate}
+            \item The 1st layer, $T(n) = 2T(n/4) + 3T(n/6) + n\lg n, \therefore t_1 = n\lg n$
+            \item The 2st layer,
+                \begin{align*}
+                    2T(n/4) + 3T(n/6) &= 2(2T(n/16) + 3T(n/24) + n/4\lg(n/4))\\
+                        &\quad +3(2T(n/24)+3T(n/36)+n/6\lg(n/6)) \\
+                        &= 4T(n/16) + 12T(n/24) + n(\lg n - \lg(24)/2)\\
+                        &= 4T(n/16) + 12T(n/24) + n\lg n, n \to \infty
+                \end{align*}
+
+                $\therefore t_2 = n\lg n$
+            \item \ldots
+        \end{enumerate}
+        We find that the time of each layer is $n\lg n$. And the number of layers, obviously, is $\lg n$.
+
+        $\therefore T(n) = \Theta(n\lg^2n)$
+    \item According to Akra-Bazzi principle and the given equation, we know that
+        $a_1 = 2, b_1 = 1/4, a_2 = 3, b_2 = 1/6, \sum_{i = 1}^{k} a_ib_i^p = 1$
+        $\therefore p = 1$
+        \begin{align*}
+            T(n) &= \Theta(n^1(1+\int_{1}^{n}\frac{x\lg x}{x^2} \rm dx))\\
+                 &= \Theta(n(1+\frac{\ln 2}{2}\lg^2n))\\
+                 &= \Theta(n\lg^2n)&
+        \end{align*}
+\end{enumerate}
+
+\section*{Q3}
+\begin{lstlisting}[language=C]
+    NEW_MAX_HEAPIFY(A, i){
+        int stack[A.heap-size] = {0};
+        push(i);
+        while(stack is not empty){
+            pop(root);
+            l = LEFT(root);
+            r = RIGHT(root);
+            if(l <= A.heap-size and A[l] > A[root]){
+                largest = l;
+            }
+            else{
+                largest = root;
+            }
+            if(r <= A.heap-size and A[r] > A[largest]){
+                largest = r;
+            }
+            if(largest != root){
+                exchange A[root] with A[largest];
+                push(largest);
+            }
+        }
+    }
+\end{lstlisting}
+
+\section*{Q4}
+Set a random variable x to represent the ratio of the smaller part, then x is also the pivot's ``distance'' to the nearer edge.
+
+Obviously, $x ~ U(0, \frac{1}{2}), \text{namely }f(x) = 2I_{(0, \frac{1}{2})}(x)$
+
+$\therefore P(\text{A more balanced division}) = P(\alpha < x < \frac{1}{2}) = \int_{\alpha}^{1/2}f(x)\rm dx = 1 - 2\alpha$
+
+\section*{Q5}
+\begin{enumerate}
+    \item Based on the leftmost element
+        \begin{enumerate}
+            \item Take 1 as the pivot, scan the list from left to right, and 
+                    move the elements smaller than pivot to the left side.
+                    Elements 2, 3, \dots, 7 are all larger than 1 therefore do
+                    not move. Finally put 1 in the approriate position and we get
+                    [1,3,3,5,6,7,2]. Then recursively sort the left part and right part.
+            \item The right part is empty, over.
+            \item Sort the right part: take 2 as the pivot. Similarly to step (a),
+                    we finally get [2,3,3,6,7,5]. Then recursively sort the left part
+                    and the right part.
+            \item Finally, we get the sorted list.
+        \end{enumerate}
+    \item Based on the median of the three specified numbers
+        \begin{enumerate}
+            \item Take 2(the median of [1,2,5]) as the pivot, scan the list
+                    from left to right\ldots Finally we get [1,2,3,3,5,6,7].
+            \item The left part has only one element, so we don't need to sort it.
+                    Take 5 as the pivot to sort the right part. Recursively repeat
+                    these steps\dots
+            \item Finally, we get the sorted list.
+        \end{enumerate}
+    \item Select the most balanced partition.
+            \begin{enumerate}
+                \item Take 3 as pivot, and then we get [2,3,1] as the left part
+                        and [6,7,5] as the right part.
+                \item Then take 2 as pivot to sort the left part, and then we get
+                        [1,2,3]. Both parts' length is 1, over. And take 6 as pivot
+                        to sort the right part, then we get [5,6,7]. It's over, too.
+
+            \end{enumerate}
+\end{enumerate}
+\end{sloppypar}
+\end{document}

@@ -1,0 +1,118 @@
+\documentclass[UTF8]{ctexart} % to support Chinese
+
+\usepackage{amsmath}    % math
+% \usepackage{amssymb}
+\usepackage{listings}   % 代码段
+
+\title{Algorithms Homework 3}
+\author{PB22111620 Ai Chang}
+
+\begin{document}
+\begin{sloppypar}   % 避免边界越界
+
+\maketitle
+
+\section*{Q1}
+\begin{enumerate}
+    \item 插入排序、冒泡排序、希尔排序、快速排序是稳定的，堆排序不是稳定的。
+    \item 对每个元素添加一个属性 `position' 储存其初始位置信息，在排序开始前按顺序
+    赋值1, 2, \dots, n, 排序完成后从前到后遍历，如果遇到关键值相同的子串，对该字串
+    以 `position' 为关键值再次进行排序。该方法带来额外的时间开销为O(n), 空间开销为O(n)。
+\end{enumerate}
+
+\section*{Q2}
+    修改后的代码如下：
+    \begin{lstlisting}[language=C]
+    int stack[N];
+
+    void push(p, r);
+    void pull(*p, *r);
+
+    Quicksort(A, p, r){
+        if(p < r) {
+            q = Partition(A, p, r);
+            push(p, q - 1);
+            push(q + 1, r);
+            while(stack is not empty){
+                pull(&p, &r);
+                Quicksort(A, p, r);
+            }
+        }
+    }
+    \end{lstlisting}
+
+\section*{Q3}
+易知，对于一棵二叉搜索树，每个节点需要进行比较的次数为该节点到根节点的距离。因此，需要考虑
+构造出的二叉搜索树所有节点到根节点的距离的和最小的情况。显然，这种情况要求二叉树较为均衡，
+其节点到根节点距离的和等价于一棵完全二叉树。
+
+设该完全二叉树 T 共有 n 个节点，树高为 h, 其中第 h 层有 k 个节点，显然有
+$$2^0 + 2^1 + \dots + 2^{h-2} + 1 \leq n \leq 2^0 + 2^1 + \dots + 2^{h-1}$$
+即$$\log(n+1) \leq h \leq \log n + 1$$
+以及$$1 \leq k \leq 2^{h-1}$$
+设所有节点到根节点的距离的和为 SUM, 则$$SUM = 2^0*0 + 2^1*1 + \dots + 2^{h-2}*(h-2) + k*(h-1)$$
+即$$SUM = \Sigma_{i=1}^{h-2}i*2^i + (h-1)*k$$
+而$$\Sigma_{i=1}^n i*2^i = (n-1)2^{n+1}+2$$
+故$$(h-1)*2^{h-1}+h+1 \leq SUM \leq (h-2)*2^h+2$$
+即$$\frac{1}{2}(n+1)\log(n+1)+\log(n+1)-\frac{n+1}{2}+1 \leq SUM \leq 2n\log n-2n+2$$
+显然$$SUM(n) = \Omega(n\log n)$$命题得证。
+
+\section*{Q4}
+设 $X_n$ 为 n 个节点的二叉搜索树的树高，$Y_n = 2^{X_n}$。
+若根节点为该序列中第 i 小的数，则根节点的左子树共有 $i-1$
+个节点，右子树有 $n-i$ 个节点。则有
+\begin{equation*}
+    Y_n = 2 \times max\{Y_{i-1}, Y_{n-i\}}
+\end{equation*}
+因为输入是随机的，所以抽到第 i 小的节点的概率为
+\begin{equation*}
+    Prob(i) = \frac{1}{n}, \forall i = 1, \dots, n
+\end{equation*}
+故有
+\begin{align*}
+    E(Y_n) &= E(2 \times max\{Y_{i-1}, Y_{n-i}\})\\
+           &= 2\Sigma_{i=1}^{n} Prob(i)E(max\{Y_{i-1}, Y_{n-i}\})\\
+           &\leq \frac{2}{n} \Sigma_{i=1}^{n}(E(Y_{i-1})+E(Y_{n-i}))\\
+           &= \frac{4}{n} \Sigma_{i=0}^{n-1}E(Y_i)
+\end{align*}
+由数学归纳法，易证 $$E(Y_n) \leq \frac{1}{4} C_{n+3}^{3}$$
+由$$Y_n = 2^{X_n}$$
+即$$E(Y_n) = E(2^{X_n})$$
+可得$$2^{E(X_n)} \leq E(Y_n) \leq \frac{1}{4}C_{n+3}^3$$
+而$$C_{n+3}^3 = \frac{(n+3)!}{3!n!} = \frac{(n+3)(n+2)(n+1)}{6}~O(n^3)$$
+故$$2^{E(X_n)} \leq O(n^3)$$
+所以$$E(X_n) \leq O(\log n^3) = O(\log n)$$
+
+类似的，我们同样可以得到
+\begin{align*}
+    E(Y_n)  &= 2\Sigma_{i=1}^{n} Prob(i)E(max\{Y_{i-1}, Y_{n-i}\})\\
+            &\geq \frac{2}{n} \frac{E(Y_{i-1})+E(Y_{n-i})}{2}\\
+            &= \frac{2}{n} \Sigma_{i=0}^{n-1} E(Y_i)
+\end{align*}
+后续步骤与前面的证明同理，最终可得$$E(X_n) \geq \Omega(\log n)$$
+综上，$$E(X_n) = \Theta(\log n)$$
+所以以随机的输入构建的二叉搜索树的平均节点深度的期望为$\Theta(\log(n))$，命题得证
+
+\section*{Q5}
+可以通过修改二叉树节点的数据结构，来实现该要求，代码如下：
+    \begin{lstlisting}[language=C]
+    typedef struct Node{
+        int key, order;
+        struct Node *lchild, *rchild;
+    }Node;
+
+    Node* Querykth(*root, k){
+        if(root->order < k){
+            Querykth(root->lchild, k);
+        }
+        else if(root->order = k){
+            return root;
+        }
+        else{
+            Querykth(root->rchild, k);
+        }
+    }
+    \end{lstlisting}
+易知，设目标节点的深度为 k, 则共需要 $2*(k-1)$ 次比较，所以该操作时间复杂度为$O(h)$
+\end{sloppypar}
+\end{document}
