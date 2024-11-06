@@ -128,8 +128,8 @@ $A^T_{ij} = A_{ji}$
 
 #### Column Space
 
-* $A_{m\times n}$ 中的 m 说明讨论的向量空间为 $R^n$
-* 由 A 的列向量生成的空间为 A 的列空间 C(A), 是 $R^n$ 的子空间
+* $A_{m\times n}$ 中的 m 说明讨论的向量空间为 $R^m$
+* 由 A 的列向量生成的空间为 A 的列空间 C(A), 是 $R^m$ 的子空间
 * $Ax = b$ 有解当且仅当 b 属于 A 的列空间
 * ***A 的列空间本质是 A 对应的线性映射的值域***
 
@@ -186,3 +186,43 @@ $$R\cdot N =
     | :---------: | :---------: | :---------: | :------------: |
     | $R = I$     | $R=\begin{bmatrix}I\\0\end{bmatrix}$ | $R = \begin{bmatrix}I\ F\end{bmatrix}$ | $R = \begin{bmatrix} I\ F \\ 0\ 0\end{bmatrix}$ |
     | 1 solution | 0 or 1 solution | $\infty$ solution | 0 or $\infty$ solution |
+
+### Independence, Basis and Dimension
+
+#### Independence
+
+Suppose Vecotr $x_1, \ldots, x_n$ are columns of A, they're independent when
+* No combinations give zero vector
+* Null-space of A is the zero vector
+* rank(A) = n
+Each of these conditions can lead to the conclusion.
+
+Vectors $v_1, \ldots, v_l$ span a space, means: the space consists of all combinations of these vectors.
+
+#### Basis
+
+* Basis for a space is  a sequence of vectors $v_1, \ldots, v_d$ with two
+properties:
+    1. they're independent
+    2. they span the space
+* As for $R^n$, n vectors give basis if the $n\times n$ matrix is invertible
+* Given a space, every basis for the space has the same numberr of vectors, and
+this number is the dimension of the space.
+
+#### Dimension
+
+* $rank(A) = \text{number of pivots} = dim(C(A))$
+* $dim(N(A)) = \text{number of free variables} = n - r$
+
+### Four Fundamental Subspaces
+
+* ***Column Space $C(A) \in R^m, dim(C(A)) = r$***
+    * Get rank and pivot columns by Gauss Elimination, and the columns in A corresponding to them are the
+    basis of C(A)
+* ***Null Space $N(A) \in R^n, dim(N(A)) = n - r$***
+    * rank of N(A) is $n-r$, set the free variables as "Identity matrix", and the results are the basis
+    of N(A)
+* ***Row Space $C(A^T)\in R^n, dim(C(A^T)) = r$***
+    * Similar to C(A)
+* ***Left Null Space $N(A^T) \in R^m, dim(N(A^T)) = m - r$*** 
+    * Similar to N(A)
