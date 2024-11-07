@@ -37,6 +37,9 @@ l <function>            list the function code
 ### Monitoring
 
 * disp <var>            print the value of variable every time
+* info disp             show information about all auto-display expressions
+* d disp <num>          cancel some expr to be displayed when program stops
+* undisplay             cancel display requests previously made
 * print <var>           print the value of variable
 * whatis <var>          print the type of variable
 * watch <var>           stops whenever the watched variable is modified
