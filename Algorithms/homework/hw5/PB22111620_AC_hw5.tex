@@ -1,0 +1,160 @@
+\documentclass[UTF8]{ctexart}
+
+\usepackage{amsmath}
+\usepackage{listings}
+
+\title{Algorithms Homework 5}
+\author{PB22111620 Ai Chang}
+
+\begin{document}
+\begin{sloppypar}
+\maketitle
+
+\section*{Q1}
+设 $A[n, k]$ 为具有限制增性质的, 最大值为 k 的长度为 n 的正整数序列的个数,
+$A[n]$ 为具有限制增性质的长度为 n 的正整数序列的个数; 分析可知, $A[n, k]$
+有两种方式得到: 1. $A[n-1, k-1]$ 在最后添加一个 k; 2. $A[n-1, k]$ 在序列
+末尾添加任何一个不超过 k 的数. 故可得递推式为
+\[A[n+1, k] = A[n,k-1] + A[n, k] * k\]
+而满足限制增性质的长度为 n 的正整数序列数量为
+\[A[n] = \Sigma_{k=1}^{n}A[n,k]\]
+
+该过程中, 每个 $A[n, k]$ 的计算时间为常数, $A[n]$ 的计算为线性时间, 前者共需
+\[1 + 2 + \ldots + n = \frac{n(n+1)}{2}\]
+故时间复杂度为 $O(n^2)$, 后者只需计算一次. 故总时间复杂度为 $O(n^2)$, 空间
+复杂度为 $O(n^2)$. 但考虑到计算 $A[n,k]$ 时只需要用到 $A[n-1,k-1],A[n-1,k]$
+的值, 我们只需 $\Theta(2n)$ 的空间就可以记录 $n,n-1$ 两行的数据; 进一步, 我们
+可以用一个临时空间记录 $A[n-1,k]$ 的值, 就可以用 $A[n,k]$ 直接覆盖 $A[n-1,k]$
+的空间而不影响后续计算, 故最小空间复杂度应该是 $\Theta(n+1)$
+
+\section*{Q2}
+
+设 $dp[j,k]$ 表示集合 S 中是否有一个子集的和为 j, 同时另一个不相交的子集为 k.
+设集合 S 所有元素的和为 SUM, 则最终 $dp[SUM/3, SUM/3]$ 即为 output.
+
+递归式为 \[dp[j,k] = dp[j-a_i, k] || dp[j, k-a_i], a_i \in \S\]
+算法伪代码为
+\begin{lstlisting}[language=C]
+for(int i = 0; i < S.size; i++){
+    for(int j = SUM/3; j >= 0; j--){
+        for(int k = SUM/3; k >= 0; k--){
+            if(dp[j,k]){
+                dp[j + S[i], k] = true;
+                dp[j, k + S[i]] = true;
+            }
+        }
+    }
+}
+\end{lstlisting}
+该算法的所需时间为 $\Theta(n*SUM^2)$, 所需空间为 $\Theta(n*SUM^2)$
+
+\section*{Q3}
+\subsection*{(a)}
+将数组 A 分为 A-left, A-right 两部分, 则子数组最大和可能出现在 A-left, A-right 或
+A-left 与 A-right 相邻位置的拼接. 故算法如下
+\begin{lstlisting}[language=C]
+int Max_Subset(int *A, int l, int r){
+    if(l = r){
+        return A[l];
+    }
+    int mid = (l+r)/2; 
+    int max_left, max_right, max_central;
+    max_left = Max_Subset(A, l, mid);
+    max__right = Max_Subset(A, mid+1, r);
+
+    int sum = 0, lmax = 0, rmax = 0;
+    for(int i = mid; i >= l; i--){
+        sum += A[i];
+        lmax = max(lmax, sum);
+    }
+    sum = 0;
+    for(int i = mid + 1; i <= r; i++){
+        sum += A[i];
+        rmax = max(rmax, sum);
+    }
+    max_central = lmax + rmax;
+    return max(max_central, max(max_left, max_right));
+}
+\end{lstlisting}
+根据上述算法可得, 该过程的时间有递推式\[T(n) = 2T(n/2) + n\]
+由主定理可得, 其时间复杂度为 $O(n\log n)$
+
+\subsection*{(b)}
+设 $dp[i]$ 为以第 i 个元素结尾的子数组的最大和, res 为包含前 i 个元素的数组的子数组
+的最大和. 故有状态转移方程\[dp[i] = max(dp[i-1] + S[i], S[i])\]
+该算法代码如下
+\begin{lstlisting}[language=C] 
+int Max_Subset(int *A, int size){
+    int dp[size] = {0}, res = -INFTY;
+    for(int i = 0; i < size; i++) {
+        dp[i] = max(dp[i-1] + A[i], A[i]);
+        res = max(res, dp[i]); 
+    }
+    return res;
+}
+\end{lstlisting}
+\subsection*{(c)}
+可以先选定行的范围, 如考虑第 i1 行到 第 i2 行之间的所有子矩阵的最大和, 然后将每一列求和,
+就可以压缩成一维数组, 然后利用上面的方法即可, 具体实现过程如下
+\begin{lstlisting}[language=C] 
+int Max_SubMatrix(int M[m][n]) {
+    int sum_col[n] = {0}, max_current, max;
+    for(int i = 0; i < m; i++){
+        clear(sum_col);
+        for(int j = i; j < m; j++){
+            for(int k = 0; k < n; k++){
+                sum_col += M[j][k];
+            }
+            max_current = Max_Subset(sum_col, n);
+            if(max_current > max){
+                max = max_current;
+            }
+        }
+    }
+    return max;
+}
+\end{lstlisting}
+对于每个 i, 要进行 $m - i$ 次循环, 每次循环内, 需要进行 $n$ 次循环. 故时间复杂度为
+$\Theta(m^2n)$
+
+\section*{Q4}
+\subsection*{(a)}
+将旧书编号, 然后分别根据长和宽进行两次排序, 得到两个序列, 然后求最长公共子序列的长度.
+排序过程可以保证最坏时间复杂度为 $\Theta(n\log n)$(如采用堆排序), 求 LCS 过程可以
+使用动态规划, 时间复杂度为 $\Theta(n^2)$, 故最坏时间复杂度为 $\Theta(n^2)$
+\subsection*{(b)}
+对每种积木, 将其三种翻转形式都纳入考虑, 如某积木尺寸为 $a\times b\times c$, 不妨
+设 $a < b < c$, 则三种形式分别为 $(width, length, height) = (a,b,c), (a,c,b),
+(b,c,a)$. 将所有积木按宽排序, 若宽相同则按高再次排序. 排序过程时间为 $O(n\log n)$;
+排序完成后, 进入动态规划部分, 核心思想为, 对于每一个积木底面, 如果它可以放在之前的某个
+积木上面, 那我们就尝试将其堆叠上去, 更新当前最大堆叠高度. 设 $dp[i]$ 为以第 i 个积木
+为最底层的最大堆叠高度, 对于每个积木底面 i, 遍历之前所有的积木底面 j, 如果第 j 个积木
+可以放在第 i 个积木下面, 则更新 dp[i], 故有递推表达式
+\[dp[i] = max(dp[i], dp[j] + height[i])\]
+实现过程如下:
+\begin{lstlisting}[language=C]  
+int *Max_Lego_Height(Block *list, int num){
+    int dp[num] = {0};
+    Heap_Sort(list);        // O(nlogn)
+    for(int i = 0; i < num; i++){       // O(n^2)
+        int last_w = 0, last_l = 0, w, l, h;
+        dp[i] = list[i].height;
+        w = list[i].width;
+        l = list[i].length;
+        h = list[i].height;
+        for(int j = 0; j < i; j++){
+            int new_w = list[j].width, new_l = list[j].length;
+            if(new_w == last_w || new_l == last_l) {
+                continue;
+            }
+            if(new_w < w && new_l < l) {
+                dp[i] = max(dp[i], dp[j] + h);
+            }
+        }
+    }
+    return dp; 
+}
+\end{lstlisting}
+综上, 该过程时间复杂度为 $O(n^2)$
+\end{sloppypar}
+\end{document}
