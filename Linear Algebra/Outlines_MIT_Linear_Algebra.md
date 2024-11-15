@@ -322,3 +322,57 @@ U = all 3 by 3 upper triangular matrices
                     a_1^Tq_2 \; a_2^Tq_2 \end{bmatrix}\]
     其中左下角的 $a_1^Tq_2$ 始终为零, 因为 Gram-Schmidt 正交化总是使后来构造的向量正交
     于先前的向量. 故 R 为上三角矩阵
+
+## Properties of Determinants
+
+* $\det A = |A|$
+* Properties:
+    * $\det I = 1$
+    * 交换矩阵的两行: 翻转行列式的正负号
+    * 行具有线性性
+    * 如果两行相等, 则行列式为 0
+    * 从第 k 行减去第 i 行的 l 倍, 行列式不变
+    * 如果方阵的某一行为 0, 则其行列式为 0
+    * 有上三角矩阵$$U = \begin{bmatrix} d_1\; *\; \ldots\; *\; \\
+    0\; d_2\; \ldots\; *\; \\ \vdots\; \vdots\; \ddots\; \vdots\; \\
+    0\; 0\; \ldots\; 1\;\end{bmatrix}$$, 则 $\det U = d_1d_2\cdots d_n$
+    * 当矩阵为奇异矩阵时, 其行列式为 0; 当且仅当矩阵可逆时, 行列式不为 0
+    * $\det AB = \det A \det B$, 由此可得, $\det A^{-1} = \frac{1}{\det A}$.
+    类似的, $\det A^2 = (\det A)^2$, $\det 2A = 2^n \det A$
+    * $\det A^T = \det A$, 前面一直讨论的是行的变化给行列式带来的影响, 有了该属性,
+    行与列变得等价.
+
+## Determinant Formulas and Cofactors
+
+* BIG FORMULA
+    * $\det A = \Sigma \pm a_{1\alpha} a_{2\beta} \cdots a_{n\omega},\quad 
+    (\alpha, \beta, \ldots, \omega) = P_n$
+* Cofactors(代数余子式)
+    * Cofactors of $a_{ij} = C_{ij} = (-1)^{i+j}\det{M}$, M 为原矩阵删去第 i 行,
+    第 j 列后得到的矩阵
+    * $\det A = \Sigma_{j=1}^{n} a_{ij}C_{ij}$
+
+## Cramer's Rule, Inverse Matrix and Volumes
+
+* Inverse Matrix
+    * $A^{-1} = \frac{1}{\det A} C^T$
+* Cramer's Rule
+    * 用来求解 $Ax=b$
+        * $x = A^{-1}b = \frac{1}{\det A} C^T b$
+        * $x_j = \frac{\det B_j}{\det A}$, 其中 $B_j = \begin{bmatrix} A_1
+        \ldots A_{j-1} B_j A_{j+1} \ldots A_n\end{bmatrix}$
+    * 该式并不方便计算
+* Volume
+    * 行列式的绝对值等于一个箱子的体积, 其正负号取决于该箱子的手性
+    * 利用该性质, 在知道箱子的顶点坐标时, 不需要复杂的开方, 求角度等, 直接计算行列式即可
+
+## Eigenvalues and Eigenvectors
+
+* $Ax = \lambda x$
+    * 进行 A 线性变换后仍与原向量平行的向量 x 称为特征向量, 系数 $\lambda$ 称为特征值
+    * 如果 A 是奇异的, $\lambda = 0$ 是一个特征值
+* 如何求解 $Ax = \lambda x$
+    * $(A-\lambda I)x = 0$, $A-\lambda x$ 一定是奇异的(否则特征向量不存在)
+    * 求解***特征方程*** $\det(A-\lambda I) = 0$, 得出特征值, 然后求零空间即可
+    * 两个特性: $Trace(A) = \Sigma_{i=1}^{n} a_{ii} = \Sigma_{i=1}^{n} = 
+    \lambda_i$, $\prod_{i=1}^{n} \lambda_i = \det A$
