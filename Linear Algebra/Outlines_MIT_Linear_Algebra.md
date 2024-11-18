@@ -310,8 +310,49 @@ U = all 3 by 3 upper triangular matrices
     - Every symmetric matrices is a combination of perpendicular projection
     matrices($P = A(A^TA)^{-1}A^T = qq^T$).
 - For symmetric matrices, # positive pivots = # positive $\lambda$'s
-- Positive definite symmetric matrix
-    - All eigenvalues / pivots / subdeterminants are positive
+- Positive Definite Matrix(正定矩阵)(it must be symmetric matrix first)
+    - Tests(usually, we use the first three to test, and the fourth to define)
+        - Eigenvalue test: all eigenvalues are positive
+        - Determinant test: determinants of all leading principal submatrix
+        are positive
+        - Pivots test: all pivots are positive
+        - $x^TAx > 0$ for all nonzero x
+    - Principal Axis Theorem
+        - Factorization $A = Q\Lambda Q^T$, then eigenvalues and eigenvectors
+        are all visualizable
+    - Some positive definite matrix
+        - if A is positive definite matrix, then $A^{-1}$ is
+        - if A, B are positive definite matrices, then $A+B$ is
+        - if $rank(A) = n$, then $A^TA$ is positive definite matrix
+    - Application
+        - The multivariate function $f(x_1, x_2, \ldots, x_n)$ has the minimum
+        $\Leftrightarrow$ the second-order partial derivative matrix to be a
+        positive definite matrix
+- Similar Matrix
+    - Definition: A and B are similar means: for some invertible matrices M,
+    $B = M^{-1}AM$
+    - Property
+        - Similar matrices have the same eigenvalues
+        - if $B = M^{-1}AM$, then $eigenvector(B) = M^{-1}eigenvector(A)$
+    - Example: suppose that $\lambda_1 = \lambda_2 = 4$, then matrices can be 
+    divided into two families based on similarity
+        - First family: only on matrix:
+        $\begin{bmatrix} 4 & 0\\ 0 & 4\end{bmatrix}$
+        - Second family: all the others with $\lambda_1 = \lambda_2 = 4$, in
+        which $\begin{bmatrix} 4&1\\0&4\end{bmatrix}$ is the best guy, we call
+        it the Jordan Form
+    - Jordan Form
+        - Jordan Block
+            - The matrix with form $$\begin{bmatrix} \lambda & 1 & \cdots 
+            & 0\\0& \lambda & \ddots & 0\\ \vdots & \vdots & \ddots & \vdots
+            & \\ 0 & 0 & \cdots & \lambda \end{bmatrix}$$
+            is called Jordan Block
+            - Jordan matrix is constructed by a number of Jordan Blocks along
+            the diagonal line and some zero matrix. The number of Jordan Blocks
+            is the number of eigenvalues(with different values)
+        - Each matrix is similar to a Jordan Matrix
+            
+            
 
 ### Projections onto Subspaces
 
@@ -414,7 +455,7 @@ U = all 3 by 3 upper triangular matrices
 
 ### Cramer's Rule, Inverse Matrix and Volumes
 
-- Inverse Matrix
+- Inverse Matrix described by determinant
     - $A^{-1} = \frac{1}{\det A} A^*$
 - Cramer's Rule
     - 用来求解 $Ax=b$
@@ -422,12 +463,12 @@ U = all 3 by 3 upper triangular matrices
         - $x_j = \frac{\det B_j}{\det A}$, 其中 $B_j = \begin{bmatrix} A_1
         \ldots A_{j-1} B_j A_{j+1} \ldots A_n\end{bmatrix}$
     - The cost of Cramer's Rule is very high
-- Volume
+- Volume(Very familar! Cross product in vectors!)
     - The determinant of a $3\times 3$ matrix equals to the volume of the box
     constructed by $\hat i, \hat j, \hat k$, likewise, the det of a $2\times 2$
-    matrix describes the area of a parallelogram constructed by $\hat i, \hat j$
-    - This property provides us with a much more convenient way to get the area of
-    a parallelogram or a volume of a box.
+    matrix describes the area of a parallelogram constructed by $\hat i,\hat j$
+    - This property provides us with a much more convenient way to get the
+    area of a parallelogram or a volume of a box.
 
 ## Eigenvalues and Eigenvectors
 
@@ -444,7 +485,7 @@ U = all 3 by 3 upper triangular matrices
 
 ### Diagonalization and Power of A
 
-For $Ax = \lambda x$, we introduce `eigenvalues` and `eigenvectors`.
+- For $Ax = \lambda x$, we introduce `eigenvalues` and `eigenvectors`.
 The first is to find them, we do it by solving `characteristic equation`.
 And then is to use them, we will talk about it in this lecture.
 
@@ -510,3 +551,33 @@ c_2\lambda_2^k x_2 + \ldots + c_n\lambda_n^k x_n$
     - for functions, $f^Tg = \int f(x)g(x) \rm dx$
     - $a_i = \int_0^{2\pi} f(x)\cos ix \rm dx$
     - $b_i = \int_0^{2\pi} f(x)\sin ix \rm dx$
+
+### Complex Matrices and Fast Fourier Transformation
+
+#### Complex Matrices
+
+- $z = \begin{bmatrix} z_1\\ z_2\\ \vdots\\ z_n \end{bmatrix}$, where 
+$z_i \in C$, $z \in C^n$
+- Length
+    - $|z| = \sqrt{\bar{z}^Tz} = z^Hz$, H refers to Hermite or corresponding
+    adj. Hermitian
+- Inner product
+    - $y^H z$ compared to $y^Tz$ in $R^n$
+- Symmetricity
+    - $A^H = A \Leftrightarrow$ A is symmetric
+- Orthogonality
+    - $y^Tx = 0 \to y^Hx = 0$, $Q^TQ = I \to Q^HQ = I$, but here we call it as
+    ***Unitary Matrix***
+
+#### Fast Fourier Transformation
+
+- Fourier matrix of order n:
+    $$F_n = \begin{bmatrix} 1& 1& 1& \cdots& 1\\
+    1& \omega& \omega^2& \cdots& \omega^{n-1}\\
+    1& \omega^2& \omega^4& \cdots& \omega^{2(n-1)}\\
+    \vdots& \vdots& \vdots& \ddots& \vdots\\
+    1& \omega^{n-1}& \omega^{2(n-1)}& \cdots& \omega^{(n-1)^2}\end{bmatrix}$$
+- FFT
+    - Traditional method takes $\Theta(n^2)$ when calculating $Ax$, but FFT can
+    do it with $\Theta(n\log n)$
+    - Specific process ommitted.
