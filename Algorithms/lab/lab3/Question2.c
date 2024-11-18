@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define MAX_WORD_NUM    100001
+#define MAX_WORD_NUM    5000000
 #define MAX_WORD_LEN    51
 #define MAX_STR_LEN     100001
 // next -> Trie Tree, number -> the number of node x
