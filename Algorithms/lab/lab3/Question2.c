@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#define MAX_WORD_NUM    5000000
+#define MAX_WORD_NUM    5000001
 #define MAX_WORD_LEN    51
 #define MAX_STR_LEN     100001
 // next -> Trie Tree, number -> the number of node x
-int next[MAX_WORD_LEN][26], number[MAX_WORD_NUM], word_num, text_len, node_id;
+int next[MAX_WORD_NUM][26], number[MAX_WORD_NUM], word_num, text_len, node_id;
 char text[MAX_STR_LEN];
 
 void insert(int len, char* word) {
