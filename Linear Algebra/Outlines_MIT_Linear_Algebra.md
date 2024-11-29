@@ -500,7 +500,8 @@ U = all 3 by 3 upper triangular matrices
         - $x = A^{-1}b = \frac{1}{\det A} A^* b$
         - $x_j = \frac{\det B_j}{\det A}$, 其中 $B_j = \begin{bmatrix} A_1
         \ldots A_{j-1} B_j A_{j+1} \ldots A_n\end{bmatrix}$
-    - The cost of Cramer's Rule is very high
+    - The cost of Cramer's Rule is very high, so it's not a good method
+    to solve $Ax = b$ in computer. But it's very intuitive in geometry.
 - Volume(Very familar! Cross product in vectors!)
     - The determinant of a $3\times 3$ matrix equals to the volume of the 
     box constructed by $\hat i, \hat j, \hat k$, likewise, the det of a 
@@ -547,8 +548,8 @@ And then is to use them, we will talk about it in this lecture.
 ## Linear Transformation
 
 - Two rules for linear transformation $\to$ linearity!
-    - $ T(v + w) = T(v) + T(w)$
-    - $ T(cv) = cT(v)$
+    - Additivity:$ T(v + w) = T(v) + T(w)$
+    - Scaling:$ T(cv) = cT(v)$
 
 ### Corresponding Matrix
 
@@ -709,16 +710,54 @@ $z_i \in C$, $z \in C^n$
     x_1^{n-1} & x_2^{n-1} & \cdots & x_n^{n-1}\end{vmatrix} = 
     \prod_{1\leq j < i \leq n} (x_i - x_j)$$
 
-### Determinant of Square Matrix
+#### Determinant of Square Matrix
 
 - $|A|^T = |A|, |A^{-1}| = |A|^{-1}, |A^*| = |A|^{n-1}$
 - $|kA| = k^n|A|$
-- if A, B are similar, then $|A| = |B|$
 - $|A| = \prod_{i = 1}^n \lambda_i$
+    - if A, B are similar, then $|A| = |B|$
 
 ### Matrix
 
+#### Some Special Matrices
+
+- Adjugate Matrix `$A^*$`
+    - $AA^* = A^*A = |A| I$
+        - $A^* = |A|A^{-1}
+        - $|A^*| = |A|^{n-1}$
+        - $rank(A^*) = \begin{cases} n, \quad if\; r(A) = n\\
+        1, \quad if\; r(A) = n-1\\
+        0, \quad otherwise\end{cases}$$
+- Row-Echelon Form Matrix
+- Reduced Row-Echelon Form Matrix
+    - A Row-Echelon Form Matrix with all non-zero rows starting with 1,
+    and the numbers above or below pivots variables being 0
+- Orthogonal Matrix
+    - $AA^T = A^TA = I$
+
+#### Rank
+
+- $rank(A) = rank(AA^T)$
+- $rank(A + B) \leq rank(A) + rank(B)$
+- $rank(AB) \leq \min\{rank(A), rank(B)\}$
+- $rank(AB) = rank(B) \quad if\; A$ is invertible
+- $rank(A) = rank(B)$ is A is similar with B
+- $rank \begin{bmatrix} A & 0 \\ 0 & B\end{bmatrix} = rank(A) + rank(B)$
+
 ### n-dimension Vector
+
+- 在向量组 $\alpha_1, \ldots, \alpha_n$ 中，若存在 r 个向量 $\alpha_{i_1}, 
+\ldots, \alpha_{i_r}$，满足
+    - $\alpha_{i_1}, \ldots, \alpha_{i_r}$ 线性无关
+    - 在加入任何一个其他向量 $\alpha_j$，$\alpha_{i_1}, \ldots, \alpha_{i_r}, a_j$ 
+    线性相关，
+则称  $\alpha_{i_1}, \ldots, \alpha_{i_r}$ 是向量组 
+$\alpha_1, \ldots, \alpha_n$ 的一个极大线性无关组
+- 向量组 $\alpha_1, \ldots, \alpha_n$ 的极大线性无关组中向量的个数 r 称为 
+向量组 $\alpha_1, \ldots, \alpha_n$ 的秩$
+- $\alpha_1, \ldots, \alpha_n$ 中任意一个向量都可以表示成其极大线性无关组的线性组合
+- $Ax = b$ 有解 $\Leftrightarrow$ $rank(A) = rank[A\; b]$
+- 任何部分组相关 $\Rightarrow$ 整体组相关; 整体组无关 $\Rightarrow$ 任何部分组无关
 
 ### Linear Equations
 
@@ -749,5 +788,18 @@ $Ax = b$, and $\beta$ is a solution of $Ax = 0$
 
 ### Eigenvalue and Eigenvector
 
-### Quadratic Form
-
+- 若存在数 $\lambda$ 及非零向量 $x$ 使得 $Ax = \lambda x$ 成立, 则称 $\lambda$ 
+为 x 的一个特征值, 称 $x$ 为 A 属于 $\lambda$ 的特征向量
+    - $|A - \lambda I|$ 称为 A 的特征多项式, $|A - \lambda I| = 0$ 称为 A 的特征方程
+- $A, B$ 都是 n 阶矩阵, 若存在可逆矩阵 $P$, 使得 $P^{-1}AP = B$, 则称 A 与 B 相似
+    - 相似在给定特征向量反求矩阵时十分有用
+    - 若 A 与 B 相似, 则 A 与 B 有相同的特征值
+    - 特别的, 若 $A$ 与对角矩阵相似, 则称 A 可对角化
+- A 可对角化的条件
+    - A 有 n 个线性无关的特征向量 / A 有 n 个不同的特征值
+    - 对于 A 的每个特征值, 其线性无关的特征向量个数等于该特征值的重数.
+    即 $r(A - \lambda_i I) = n - n_i$
+- 实对称矩阵的不同特征值对应的特征向量相互正交, 且特征值均为实数.
+    - 实对称矩阵 A 必可对角化, 且总存在正交阵 Q 使得
+    $$Q^{-1}AQ = Q^{-1}AQ = \begin{bmatrix} \lambda_1 & & & \\
+    & \lambda_2 & & \\ & & \ddots & \\ & & & \lambda_n \end{bmatrix}$$
