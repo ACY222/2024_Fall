@@ -20,7 +20,7 @@ void SWAP(Genie *A, int i, int j){
 }
 
 // sort genies according to their start time
-void Quick_Sort(Genie *A, int l, int r{
+void Quick_Sort(Genie *A, int l, int r) {
     if(l >= r){
         return;
     }
