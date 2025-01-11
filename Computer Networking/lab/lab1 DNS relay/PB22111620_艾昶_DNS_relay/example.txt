@@ -1,7 +1,0 @@
-0.0.0.0 pic1.zhimg.com
-0.0.0.0 pic2.zhimg.com
-0.0.0.0 pic3.zhimg.com
-0.0.0.0 pic4.zhimg.com
-
-0.0.0.0 www.test1.com
-3.3.3.3 www.test2.com
