@@ -9,5 +9,3 @@ Strang, MIT 18.06. I'm grateful to all of them.
 The reason I build this is that with it I can find what I want easily when I
 need to revise some of the courses in the future. And it can remind me doing
 something meaningful rather than just lying in the dormitory.
-
-I need to change something
